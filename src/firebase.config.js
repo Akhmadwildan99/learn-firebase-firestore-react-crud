@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import {initializeApp} from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -12,18 +12,27 @@ const firebaseConfig = {
 
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const firebase = initializeApp(firebaseConfig);
+const db = getFirestore(firebase)
+export {firebase, db}
+// const db = getFirestore(app);
 
-export async function create(data) {
-  try {
-    const docRef = await addDoc(collection(db, "users"), {
-      username: data.username,
-      email: data.email,
-      password: data.password
-    })
-    console.log("Document written with ID: ", docRef.id);
-  } catch (err) {
-    console.error("Error adding document: ", err);
-  }
-}
+// export async function create(data) {
+//   try {
+//     const docRef = await addDoc(collection(db, "users"), {
+//       username: data.username,
+//       email: data.email,
+//       password: data.password
+//     })
+//     console.log("Document written with ID: ", docRef.id);
+//   } catch (err) {
+//     console.error("Error adding document: ", err);
+//   }
+// }
+
+// export async function read(db) {
+//   const dbUsers = collection(db, "users");
+//   const readUsers = await getDocs(dbUsers);
+//   const userList = readUsers.docs.map(doc => doc.data());
+//   return userList;
+// }

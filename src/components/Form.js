@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {create} from "../firebase.config"
+import {collection, addDoc} from 'firebase/firestore';
+import { db } from '../firebase.config';
 import {Row, Col, Container } from 'react-bootstrap';
 import './form.css';
 
@@ -8,16 +9,29 @@ export default function Form() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const data = {
-            username,
-            email,
-            password
+        if(username !== "" && email !== "" && password !== "") {
+            const data = {
+                username,
+                email,
+                password
+            }
+            try {
+                const docRef = await addDoc(collection(db, "users"), {
+                    data
+                })
+                console.log("Document written with ID: ", docRef.id);
+            } catch (err) {
+                console.error("Error adding document: ", err);
+            }
+            setError(false)
+        } else {
+            setError(true)
         }
-        await create(data);
         
     } 
     return ( 
@@ -29,6 +43,7 @@ export default function Form() {
                             <h1>
                             Form Create Player
                             </h1>
+                            {error && <h2>Isi cukk!!!</h2>}
                             <div className='form-inputs'>
                                 {/* <label className='form-label'> Username </label> */}
                                 <input
