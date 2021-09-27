@@ -7,9 +7,10 @@ import { doc, setDoc } from "firebase/firestore";
 import './form.css';
 
 function FormUpdate({updateData}) {
-    const [usernameUp, setUsernameUp] = useState(updateData.username);
-    const [emailUp, setEmailUp]= useState(updateData.email)
-    const [passwordUp, setPasswordUp] = useState(updateData.password)
+    const [usernameUp, setUsernameUp] = useState("");
+    const [emailUp, setEmailUp]= useState("")
+    const [passwordUp, setPasswordUp] = useState("");
+    const [error, setError] = useState(false);
     console.log(updateData.id)
 
     const handleSubmit = async (e) => {
@@ -20,7 +21,10 @@ function FormUpdate({updateData}) {
                 email: emailUp,
                 password: passwordUp
             }
-            await setDoc(doc(db, "users", updateData.id), dataUser)
+            await setDoc(doc(db, "users", updateData.id), dataUser);
+            setError(false)
+        } else {
+            setError(true)
         }
 
     }
@@ -33,6 +37,7 @@ function FormUpdate({updateData}) {
                             <h1>
                             Form Update Player
                             </h1>
+                            {error && <h2>Isi cukk!!!</h2>}
                             <div className='form-inputs'>
                                 {/* <label className='form-label'> Username </label> */}
                                 <input
@@ -40,7 +45,7 @@ function FormUpdate({updateData}) {
                                     type='text'
                                     name='username'
                                     placeholder='Enter your username'
-                                    value={usernameUp}
+                                    value={usernameUp ? usernameUp : updateData.username}
                                     onChange={(e) => setUsernameUp(e.target.value)}
                                 />
                                 <br/>
@@ -52,7 +57,7 @@ function FormUpdate({updateData}) {
                                     type='email'
                                     name='email'
                                     placeholder='Enter your email'
-                                    value={emailUp}
+                                    value={emailUp ? emailUp : updateData.email}
                                     onChange={(e) => setEmailUp(e.target.value)}
                                 />  
                                 <br/>
@@ -65,7 +70,7 @@ function FormUpdate({updateData}) {
                                     type='password'
                                     name='password'
                                     placeholder='Enter your password'
-                                    value={passwordUp}
+                                    value={passwordUp ? passwordUp : updateData.password}
                                     onChange={(e) => setPasswordUp(e.target.value)}
                                 /> 
                                 <br/>
