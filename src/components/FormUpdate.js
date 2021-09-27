@@ -1,47 +1,38 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {collection, addDoc} from 'firebase/firestore';
-import { db } from '../firebase.config';
 import {Row, Col, Container } from 'react-bootstrap';
+import { db } from '../firebase.config';
+import { doc, setDoc } from "firebase/firestore"; 
+
 import './form.css';
 
-export default function Form() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
-
+function FormUpdate({updateData}) {
+    const [usernameUp, setUsernameUp] = useState(updateData.username);
+    const [emailUp, setEmailUp]= useState(updateData.email)
+    const [passwordUp, setPasswordUp] = useState(updateData.password)
+    console.log(updateData.id)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(username !== "" && email !== "" && password !== "") {
-            const data = {
-                username,
-                email,
-                password
+        if(usernameUp !== "" && emailUp !== "" && passwordUp !== "") {
+            const dataUser = {
+                username: usernameUp,
+                email: emailUp,
+                password: passwordUp
             }
-            try {
-                const docRef = await addDoc(collection(db, "users"), data)
-                console.log("Document written with ID: ", docRef.id);
-            } catch (err) {
-                console.error("Error adding document: ", err);
-            }
-            setError(false)
-        } else {
-            setError(true)
+            await setDoc(doc(db, "users", updateData.id), dataUser)
         }
-        
-    } 
-    return ( 
+
+    }
+    return (
         <Container>
             <Row>
                 <Col sm={12}>
                     <div className="form-add-content">
                         <form className='form' >
                             <h1>
-                            Form Create Player
+                            Form Update Player
                             </h1>
-                            {error && <h2>Isi cukk!!!</h2>}
                             <div className='form-inputs'>
                                 {/* <label className='form-label'> Username </label> */}
                                 <input
@@ -49,8 +40,8 @@ export default function Form() {
                                     type='text'
                                     name='username'
                                     placeholder='Enter your username'
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    value={usernameUp}
+                                    onChange={(e) => setUsernameUp(e.target.value)}
                                 />
                                 <br/>
                             </div>
@@ -61,8 +52,8 @@ export default function Form() {
                                     type='email'
                                     name='email'
                                     placeholder='Enter your email'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={emailUp}
+                                    onChange={(e) => setEmailUp(e.target.value)}
                                 />  
                                 <br/>
                                           
@@ -74,8 +65,8 @@ export default function Form() {
                                     type='password'
                                     name='password'
                                     placeholder='Enter your password'
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={passwordUp}
+                                    onChange={(e) => setPasswordUp(e.target.value)}
                                 /> 
                                 <br/>
                             </div>
@@ -90,3 +81,5 @@ export default function Form() {
         </Container>
     )
 }
+
+export default FormUpdate
