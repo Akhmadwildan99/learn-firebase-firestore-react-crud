@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Container } from 'react-bootstrap';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+// import {connect} from 'react-redux';
 
 
 
@@ -23,6 +24,7 @@ function FormLogin() {
                 // Signed in 
                 const user = userCredential.user;
                 console.log('success', user)
+                localStorage.setItem("userId", JSON.stringify(user.uid));
                 // ...
             })
             .catch((error) => {
@@ -36,6 +38,10 @@ function FormLogin() {
         }
         
     } 
+
+    const handleLogout = () => {
+        localStorage.removeItem('userId');
+    }
     return (
         <Container>
             <Row>
@@ -74,8 +80,10 @@ function FormLogin() {
                             <button type='submit' className='form-input-submit' onClick={handleSubmit}>
                                 Sign Up
                             </button>
-                        </form>  
+                              
+                        </form>
                     </div>
+                    <a onclick={handleLogout} href="/" className='form-input-submit' >LOGOUT</a>
 
                 </Col>
             </Row>
@@ -83,4 +91,5 @@ function FormLogin() {
     )
 }
 
-export default FormLogin
+
+export default  FormLogin;
